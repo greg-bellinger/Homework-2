@@ -1,0 +1,388 @@
+<!--
+Name: Gregory Bellinger
+Course: 235.01
+Homework:#2
+Git-Hub: https://github.com/greg-bellinger/Homework-2
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Yahtzee
+    </title>
+</head>
+
+<style>
+h1 {text-align: center;
+}
+div.a {text-align: center;
+        background-color: #efefef;
+}
+td.a {text-align: right;
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+}
+td.b {border: 2px groove #ababab;
+        width: 2.5em;
+        height: 1.5em;
+        background-color: #acadfd;
+        border-style: inset;
+        border-color: white;
+}
+td.c {text-align: center;
+        padding-left: 60%;
+}
+
+button.a {background-color:#5c01cb; 
+            color: #f9ffde; 
+            font-family: 'Times New Roman', Times, serif;
+            padding-top: 5px; 
+            padding-bottom: 5px;
+            border-color: white;
+            margin-left: 100px;
+}
+button.b {
+            width: 85px;
+            height: 30px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            color: #060235;
+            border-style:outset;
+            border-width: 2px;
+            background-color: #acc1bc;
+            border-color: white;
+            margin-left: 75px;
+}
+body.a {
+        margin: 0;
+        background-color: #efefef;
+}
+h1 {
+    background-color: white;
+    padding-top: 15px;
+    padding-bottom: 20px;
+    margin-top: 0;
+}
+table.a {margin-left: auto;
+        margin-right: auto;
+        padding-right: 175px;
+        padding-top: 40px;
+}
+</style>
+
+<body class="a">
+<script language = "JavaScript">
+<!--
+
+var v = new Array(0,0,0,0,0); // value of each die
+var h = new Array(false, false, false, false, false); // frequency
+var r = 0; // # rolls
+var f = new Array(0,0,0,0,0,0,0);
+                //0,1,2,3,4,5,6
+var clicked = new Array(false, false, false, false, false, false, false, false, false, false, false);
+var vals = new Array(0,0,0,0,0,0,0);
+
+function roll()
+{
+    r++;
+
+    if(r < 4)
+    {
+        f[1] = f[2] = f[3] = f[4] =f[5] = f[6] = 0; // sets all initial freq to 0
+
+
+        for(var i = 0; i < 5; i++)
+        {
+            if(!h[i])
+            {
+                var a = document.getElementById("d" + i);
+
+                v[i] = Math.floor(6 * Math.random()) + 1;   
+
+                a.src = "pix/dice" + v[i] + ".gif";
+            }
+            f[v[i]]++;
+        }
+    }
+}
+
+function hold(Id)
+{
+    h[Id] = !h[Id];
+    var a = document.getElementById("d" + Id);
+
+    if(h[Id])
+    {
+        a.src = "pix/diceX" + v[Id] + ".gif";
+    }
+    else
+    {
+        a.src = "pix/dice" + v[Id] + ".gif";
+    }
+}
+function scr(x)
+{
+    if (clicked[x] == false)
+    {
+        var a = document.getElementById("s"+x);
+        a.innerHTML=f[x]*x;
+    }
+    
+}
+function threeKind()
+{
+    var x = 3;
+    for (var i = 1; i<7; i++)
+    {
+        if (f[i] == x)
+        {
+            document.getElementById("s7").innerHTML = x*i;
+            break;
+        }
+        else
+        {
+            document.getElementById("s7").innerHTML = 0;
+        }
+    }
+}
+function fourKind()
+{
+    var x = 4;
+    for (var i = 1; i<7; i++)
+    {
+        if (f[i] == x)
+        {
+            document.getElementById("s8").innerHTML = x*i;
+            break;
+        }
+        else
+        {
+            document.getElementById("s8").innerHTML = 0;
+        }
+    }
+}
+function yahtzee()
+{
+    var x = 5;
+    for (var i = 1; i<7; i++)
+    {
+        if (f[i] == x)
+        {
+            document.getElementById("s9").innerHTML = x*i;
+            break;
+        }
+        else
+        {
+            document.getElementById("s9").innerHTML = 0;
+        }
+    }
+}
+
+function total()
+{
+    var total = document.getElementById("s10");
+    var accumulator = 0;
+    for (var i = 1; i < 7; i++)
+    {
+        accumulator = accumulator + vals[i];
+    }
+    total.innerHTML = accumulator;
+}
+function clr(x)
+{
+    var b = document.getElementById("s"+x);
+    d = clicked[x];
+    if (x < 7 && d == false)
+    {
+        b.innerHTML = null;
+    }
+    else if (x < 7 && d == true)
+    {
+        scr(x);
+    }
+    else if (x == 7 && d == false)
+    {
+        b.innerHTML = null;
+    }
+    else if (x == 7 && d == true)
+    {
+        threeKind();
+    }
+    else if (x == 8 && d == false)
+    {
+        b.innerHTML = null;
+    }
+    else if (x == 8 && d == true)
+    {
+        fourKind();
+    }
+    else if (x == 9 && d == false)
+    {
+        b.innerHTML = null;
+    }
+    else if (x == 9 && d == true)
+    {
+        yahtzee();
+    }
+    else if (x == 10 && d == false)
+    {
+        b.innerHTML = null;
+    }
+    else if (x == 10 && d == true)
+    {
+        total();
+    }
+    
+}
+function clk(x)
+{
+    clicked[x] = !clicked[x];
+    if (x < 7)
+    {
+        vals[x] = f[x]*x;
+    }
+    total();    
+}
+function newGame()
+{
+    r = 0;
+    h[0] = h[1] = h[2] = h[3] = h[4] = false;
+    v[0] = v[1] = v[2] = v[3] = v[4] = 0;
+    f[1] = f[2] = f[3] = f[4] = f[5] = f[6] = 0;
+    for (var j = 1; j < 11; j++)
+    {
+        clicked[j] = false;
+    }
+    for (var i = 0; i < 5; i++)
+    {
+        var d = document.getElementById("d" + i);
+        d.src = "pix/dice0.gif";
+    }
+    for (var k = 1; k < 11; k++)
+    {
+        clr(k);
+    }
+    for (var a = 0; a < 7; a++)
+    {
+        vals[a] = 0;
+    }
+    
+}
+-->
+</script>
+
+
+<h1>Yahtzee</h1>
+
+<div class = "a">
+    <img id = "d0" onClick = "hold(0)" src = "pix/dice0.gif">
+    <img id = "d1" onClick = "hold(1)" src = "pix/dice0.gif">
+    <img id = "d2" onClick = "hold(2)" src = "pix/dice0.gif">
+    <img id = "d3" onClick = "hold(3)" src = "pix/dice0.gif">
+    <img id = "d4" onClick = "hold(4)" src = "pix/dice0.gif">
+</div>
+
+<br>
+<br>
+
+<table class="a">
+    <tr>
+        <td class = "a">
+            1's
+        </td>
+        <td class = "b" id = "s1" onMouseOver="scr(1)" onMouseOut = "clr(1)" onClick = "clk(1)"> 
+            
+        </td>
+        <td class = "c" rowspan = '5'>
+            <button onClick = "roll()" class = 'a'>
+                Roll
+            </button>
+        </td>
+    </tr>
+
+    <tr>
+        <td class = "a">
+            2's
+        </td>
+        <td class = "b" id = "s2" onMouseOver="scr(2)" onMouseOut = "clr(2)" onClick = "clk(2)"> 
+            
+        </td>
+    </tr>
+    <tr>
+        <td class = "a">
+            3's
+        </td>
+        <td class = "b" id = "s3" onMouseOver="scr(3)" onMouseOut = "clr(3)" onClick = "clk(3)"> 
+            
+        </td>
+    </tr>
+    <tr>
+        <td class = "a">
+            4's
+        </td>
+        <td class = "b" id = "s4" onMouseOver="scr(4)" onMouseOut = "clr(4)" onClick = "clk(4)"> 
+            
+        </td>
+    </tr>
+    <tr>
+        <td class = "a">
+            5's
+        </td>
+        <td class = "b" id = "s5" onMouseOver="scr(5)" onMouseOut = "clr(5)" onClick = "clk(5)"> 
+            
+        </td>
+    </tr>
+
+    <tr>
+        <td class = "a">
+            6's
+        </td>
+        <td class = "b" id = "s6" onMouseOver="scr(6)" onMouseOut = "clr(6)" onClick = "clk(6)"> 
+            
+        </td>
+        <td class = "c" rowspan = '5'>
+            <button class = "b" onClick = "newGame()">
+                New game
+            </button>
+        </td>
+    </tr>
+
+    <tr>
+        <td class = "a">
+            3 of a kind
+        </td>
+        <td class = "b" id = "s7" onMouseOver="threeKind()" onMouseOut = "clr(7)" onClick = "clk(7)"> 
+            
+        </td>
+    </tr>
+    <tr>
+        <td class = "a">
+            4 of a kind
+        </td>
+        <td class = "b" id = "s8" onMouseOver="fourKind()" onMouseOut = "clr(8)" onClick = "clk(8)"> 
+            
+        </td>
+    </tr>
+    <tr>
+        <td class = "a">
+            Yahtzee
+        </td>
+        <td class = "b" id = "s9" onMouseOver="yahtzee()" onMouseOut = "clr(9)" onClick = "clk(9)"> 
+            
+        </td>
+    </tr>
+    <tr>
+        <td class = "a">
+            Total
+        </td>
+        <td class = "b" id = "s10" onMouseOver="total()" onMouseOut="clr(10)" onClick="clk(10)"> 
+            
+        </td>
+    </tr>
+
+</table>
+</body>
+</html>
